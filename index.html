@@ -30,6 +30,25 @@
     color: var(--text-color);
   }
 
+  .countdown-banner {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  .countdown-banner p {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
   .container {
     background-color: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
@@ -41,6 +60,7 @@
     overflow: hidden;
     backdrop-filter: blur(10px);
     margin: 3rem 0;
+    margin-top: 5rem; /* Added to account for the countdown banner */
   }
 
   .container::before {
@@ -203,25 +223,6 @@
     margin-top: 2rem;
   }
 
-  /* 114會考倒數計時器樣式 */
-  .countdown {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    display: inline-block;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    animation: fadeIn 1s ease-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   /* Mobile Styles */
   @media (max-width: 768px) {
     .container {
@@ -229,6 +230,7 @@
       padding: 2rem 1rem;
       margin: 1rem 0;
       border-radius: 0;
+      margin-top: 4rem; /* Adjusted for mobile */
     }
 
     h1 {
@@ -269,9 +271,8 @@
       padding: 3px 8px;
     }
 
-    .countdown {
+    .countdown-banner p {
       font-size: 1rem;
-      padding: 8px 16px;
     }
   }
 
@@ -279,6 +280,7 @@
   @media (min-width: 769px) and (max-width: 1024px) {
     .container {
       padding: 3rem 2rem;
+      margin-top: 5rem; /* Adjusted for tablet */
     }
 
     .nav-list {
@@ -301,9 +303,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+  <div class="countdown-banner">
+    <p id="countdown">114會考倒數: 載入中...</p>
+  </div>
+
   <div class="container">
     <h1><i class="fas fa-graduation-cap"></i> 會考資訊整合平台</h1>
-    <div id="countdown" class="countdown"></div>
     <nav>
       <ul class="nav-list">
         <li class="nav-item">
@@ -445,9 +450,9 @@
       });
     }
 
-    // 114會考倒數計時器
+    // Countdown Timer
     function updateCountdown() {
-      const examDate = new Date("2025-05-16T00:00:00+08:00");
+      const examDate = new Date("2025-05-17T00:00:00+08:00");
       const now = new Date();
       const difference = examDate - now;
 
@@ -456,10 +461,10 @@
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-      document.getElementById("countdown").innerHTML = `114會考倒數：${days}天 ${hours}時 ${minutes}分 ${seconds}秒`;
+      document.getElementById('countdown').innerHTML = `114會考倒數: ${days}天 ${hours}小時 ${minutes}分 ${seconds}秒`;
     }
 
-    updateCountdown();
     setInterval(updateCountdown, 1000);
+    updateCountdown(); // Initial call to avoid delay
   </script>
 </body></html>
