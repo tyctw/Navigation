@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 主首頁 -->
+  <url>
+    <loc>https://tyctw.github.io/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- 系統異常回報 -->
+  <url>
+    <loc>https://tyctw.github.io/report_form</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- 系統異常回報查詢 -->
+  <url>
+    <loc>https://tyctw.github.io/search</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- 113會考分數序位參考 -->
+  <url>
+    <loc>https://tyctw.github.io/sequence/113score</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- TYCTW 主首頁 -->
+  <url>
+    <loc>https://sites.google.com/view/tyctw/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- 會考落點分析系統 -->
+  <url>
+    <loc>https://tyctw.github.io/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- 會考各區查榜網址 -->
+  <url>
+    <loc>https://tyctw.github.io/front/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- 全國會考分數分析 -->
+  <url>
+    <loc>https://tyctw.github.io/analysis/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- 桃園區高中職科別與學校對照表 -->
+  <url>
+    <loc>https://tyctw.github.io/Vocational-/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- 桃聯區完整會考高中錄取分數 -->
+  <url>
+    <loc>https://tyctw.github.io/Admission/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- StudySync讀書時鐘 -->
+  <url>
+    <loc>https://tyctw.github.io/StudySync/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- 桃聯區會考各校序位推估 -->
+  <url>
+    <loc>https://tyctw.github.io/sequence/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- 114會考倒數 -->
+  <url>
+    <loc>https://tyctw.github.io/114clock/</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- 職業科介紹 -->
+  <url>
+    <loc>https://tyctw.github.io/Vocational-/Professional_subjects</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- 桃園市高中職地圖 -->
+  <url>
+    <loc>https://tyctw.github.io/Taoyuan_High_School_location/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- 桃聯區會考各校錄取分數查詢 -->
+  <url>
+    <loc>https://tyctw.github.io/tyc/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>
