@@ -7,20 +7,39 @@
       @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');
     
       :root {
+        /* Light mode variables */
         --primary-color: #4a90e2;
         --secondary-color: #50c878;
         --background-color: #f0f4f8;
         --text-color: #333;
         --hover-color: #ff6b6b;
-        --accent-color: #FF6600;  /* Brighter orange */
-        --new-color: #FF1493;     /* Deep pink */
-        --newest-color: #00FF00;  /* Lime green */
-        --latest-color: #1E90FF;  /* Dodger blue */
+        --accent-color: #FF6600;
+        --new-color: #FF1493;
+        --newest-color: #32CD32;
+        --latest-color: #1E90FF;
+        --container-bg: rgba(255, 255, 255, 0.95);
+        --footer-bg: rgba(240, 240, 240, 0.8);
       }
-    
+
+      [data-theme="dark"] {
+        /* Dark mode variables */
+        --primary-color: #6ab0ff;
+        --secondary-color: #70e898;
+        --background-color: #121212;
+        --text-color: #f0f0f0;
+        --hover-color: #ff8b8b;
+        --accent-color: #FF8C40;
+        --new-color: #FF69B4;
+        --newest-color: #32CD32;
+        --latest-color: #4169E1;
+        --container-bg: rgba(30, 30, 30, 0.95);
+        --footer-bg: rgba(18, 18, 18, 0.8);
+      }
+
       body {
+        background: var(--background-color);
+        color: var(--text-color);
         font-family: 'Noto Sans TC', Arial, sans-serif;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         margin: 0;
         padding: 0;
         display: flex;
@@ -28,9 +47,8 @@
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        color: var(--text-color);
       }
-    
+
       .countdown-banner {
         background-color: var(--primary-color);
         color: white;
@@ -50,8 +68,37 @@
         font-weight: bold;
       }
     
+      .language-switch {
+        position: fixed;
+        top: 10px;
+        right: 20px;
+        z-index: 1001;
+      }
+
+      .mode-switch {
+        position: fixed;
+        top: 10px;
+        right: 80px;
+        z-index: 1001;
+      }
+      
+      #languageToggle, #modeToggle {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+      
+      #languageToggle:hover, #modeToggle:hover {
+        background-color: var(--hover-color);
+      }
+    
       .container {
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: var(--container-bg);
         border-radius: 20px;
         box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.07);
         padding: 4rem 3rem;
@@ -63,7 +110,7 @@
         margin: 3rem 0;
         margin-top: 5rem;
       }
-    
+
       .container::before {
         content: '';
         position: absolute;
@@ -76,12 +123,12 @@
         z-index: -1;
         animation: gradientAnimation 15s ease infinite;
       }
-    
+
       @keyframes gradientAnimation {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
-    
+
       h1 {
         color: var(--primary-color);
         text-align: center;
@@ -91,7 +138,7 @@
         position: relative;
         letter-spacing: 1px;
       }
-    
+
       h1::after {
         content: '';
         position: absolute;
@@ -103,7 +150,7 @@
         background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
         border-radius: 2px;
       }
-    
+
       .nav-list {
         list-style-type: none;
         padding: 0;
@@ -111,22 +158,22 @@
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 4rem;
       }
-    
+
       .nav-item {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         margin-bottom: 3rem;
       }
-    
+
       .nav-item:hover {
         transform: translateY(-5px) scale(1.02);
         box-shadow: 0 15px 30px rgba(0,0,0,0.1);
       }
-    
+
       .nav-link {
+        background-color: var(--container-bg);
         display: flex;
         flex-direction: column;
         padding: 2.5rem;
-        background-color: #ffffff;
         border-radius: 15px;
         color: var(--text-color);
         text-decoration: none;
@@ -135,9 +182,14 @@
         position: relative;
         overflow: hidden;
         height: 100%;
-        border: 1px solid rgba(0,0,0,0.05);
+        border: 1px solid rgba(0,0,0,0.1);
       }
-    
+
+      [data-theme="dark"] .nav-link {
+        background-color: #1e1e1e;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+
       .nav-link::before {
         content: '';
         position: absolute;
@@ -148,48 +200,48 @@
         background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         transition: 0.5s;
       }
-    
+
       .nav-link:hover::before {
         left: 100%;
       }
-    
+
       .nav-link:hover {
         background: linear-gradient(135deg, var(--hover-color) 0%, var(--primary-color) 100%);
         color: white;
         transform: translateY(-3px);
       }
-    
+
       .nav-title {
         font-size: 1.5rem;
         font-weight: bold;
         margin-bottom: 1.2rem;
         transition: color 0.3s ease;
       }
-    
+
       .nav-description {
-        font-size: 1rem;
-        color: #666;
+        color: var(--text-color);
+        opacity: 0.7;
         margin-top: auto;
         transition: color 0.3s ease;
         line-height: 1.6;
       }
-    
+
       .nav-link:hover .nav-description {
         color: rgba(255,255,255,0.9);
       }
-    
+
       .icon {
         font-size: 2.5rem;
         margin-bottom: 1.8rem;
         color: var(--primary-color);
         transition: color 0.3s ease, transform 0.3s ease;
       }
-    
+
       .nav-link:hover .icon {
         color: white;
         transform: scale(1.1);
       }
-    
+
       .badge {
         position: absolute;
         top: 15px;
@@ -201,25 +253,25 @@
         font-weight: bold;
         animation: pulse 2s infinite;
         box-shadow: 0 0 10px rgba(255,255,255,0.5);
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.8); /* Add text shadow for all badges */
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
       }
-    
+
       .new-badge { 
         background-color: var(--accent-color);
-        color: #FFFFFF; /* Ensure high contrast white text */
+        color: #FFFFFF; 
       }
       .newest-badge { 
         background-color: var(--new-color);
-        color: #FFFFFF; /* Ensure high contrast white text */
+        color: #FFFFFF; 
       }
       .latest-badge { 
         background-color: var(--newest-color);
-        color: #000000; /* Use black text for better contrast on lime green */
-        text-shadow: 1px 1px 2px rgba(255,255,255,0.8); /* White text shadow for dark text on light background */
+        color: #000000; 
+        text-shadow: 1px 1px 2px rgba(255,255,255,0.8); 
       }
       .brand-new-badge { 
         background-color: var(--latest-color);
-        color: #FFFFFF; /* Ensure high contrast white text */
+        color: #FFFFFF; 
       }
     
       @keyframes pulse {
@@ -232,13 +284,12 @@
         text-align: center;
         padding: 20px;
         font-size: 0.9rem;
-        color: #666;
+        color: var(--text-color);
         width: 100%;
-        background-color: rgba(255, 255, 255, 0.8);
+        background-color: var(--footer-bg);
         margin-top: 2rem;
       }
     
-      /* Mobile Styles */
       @media (max-width: 768px) {
         .container {
           width: 100%;
@@ -291,7 +342,6 @@
         }
       }
     
-      /* Tablet Styles */
       @media (min-width: 769px) and (max-width: 1024px) {
         .container {
           padding: 3rem 2rem;
@@ -308,7 +358,6 @@
         }
       }
     
-      /* Add smooth scrolling for iOS devices */
       @supports (-webkit-overflow-scrolling: touch) {
         body {
           -webkit-overflow-scrolling: touch;
@@ -318,7 +367,7 @@
       .coming-soon {
         text-align: center;
         padding: 30px;
-        background-color: #f8f9fa;
+        background-color: var(--container-bg);
         border-radius: 15px;
         margin-top: 4rem;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -335,19 +384,22 @@
         color: var(--text-color);
       }
   
-      /* Loading Animation Styles */
       .loading-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(255, 255, 255, 0.9);
+        background-color: rgba(18, 18, 18, 0.9);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 9999;
         transition: opacity 0.5s ease-out;
+      }
+  
+      .loading-overlay[data-theme="light"] {
+        background-color: rgba(240, 240, 240, 0.9);
       }
   
       .loading-spinner {
@@ -371,7 +423,6 @@
         font-weight: bold;
       }
   
-      /* Fade out animation for loading overlay */
       @keyframes fadeOut {
         from { opacity: 1; }
         to { opacity: 0; }
@@ -380,7 +431,7 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     </head>
-    <body>
+    <body data-theme="dark">
       <div id="loadingOverlay" class="loading-overlay">
         <div class="loading-content">
           <div class="loading-spinner"></div>
@@ -391,6 +442,13 @@
       <div class="countdown-banner">
         <p id="countdown">114會考倒數: 載入中...</p>
       </div>
+      
+      <div class="language-switch">
+        <button id="languageToggle">EN</button>
+      </div>
+      <div class="mode-switch">
+        <button id="modeToggle"><i class="fas fa-sun"></i></button>
+      </div>
     
       <div class="container">
         <h1><i class="fas fa-graduation-cap"></i> TYCTW會考資訊整合平台</h1>
@@ -399,7 +457,7 @@
                <!-- Navigation items will be dynamically inserted here -->
              </ul>
         </nav>
-            <div class="coming-soon">
+        <div class="coming-soon">
           <h2><i class="fas fa-rocket"></i> 更多功能即將推出！</h2>
           <p>我們正在不斷努力，為您開發更多有用的工具和資源。敬請期待！</p>
         </div>
@@ -411,7 +469,58 @@
       </footer>
     
       <script>
-        // Function to fetch navigation items from App Script
+        let currentLanguage = 'zh'; // Default language is Chinese
+        let currentMode = 'dark'; // Default mode is now dark
+        
+        const translations = {
+          zh: {
+            countdown: '114會考倒數:',
+            title: 'TYCTW會考資訊整合平台',
+            comingSoonTitle: '更多功能即將推出！',
+            comingSoonDesc: '我們正在不斷努力，為您開發更多有用的工具和資源。敬請期待！',
+            footer1: '會考資訊整合平台. All rights reserved.',
+            footer2: '由 TYCTW會考落點分析平台 設計與維護',
+            loading: '載入中...'
+          },
+          en: {
+            countdown: 'Countdown to 114 Exam:',
+            title: 'TYCTW Exam Information Integration Platform',
+            comingSoonTitle: 'More features coming soon!',
+            comingSoonDesc: 'We are constantly working to develop more useful tools and resources for you. Stay tuned!',
+            footer1: 'Exam Information Integration Platform. All rights reserved.',
+            footer2: 'Designed and maintained by TYCTW Exam Score Analysis Platform',
+            loading: 'Loading...'
+          }
+        };
+        
+        function switchLanguage() {
+          currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh';
+          updateContent();
+          document.getElementById('languageToggle').textContent = currentLanguage === 'zh' ? 'EN' : '中';
+        }
+        
+        function switchMode() {
+          currentMode = currentMode === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', currentMode);
+          document.body.setAttribute('data-theme', currentMode);
+          updateModeIcon();
+        }
+        
+        function updateModeIcon() {
+          const modeIcon = document.querySelector('#modeToggle i');
+          modeIcon.className = currentMode === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        function updateContent() {
+          document.querySelector('h1').innerHTML = `<i class="fas fa-graduation-cap"></i> ${translations[currentLanguage].title}`;
+          document.querySelector('.coming-soon h2').innerHTML = `<i class="fas fa-rocket"></i> ${translations[currentLanguage].comingSoonTitle}`;
+          document.querySelector('.coming-soon p').textContent = translations[currentLanguage].comingSoonDesc;
+          document.querySelector('.footer p:first-child').textContent = `© 2024 ${translations[currentLanguage].footer1}`;
+          document.querySelector('.footer p:last-child').textContent = translations[currentLanguage].footer2;
+          document.querySelector('.loading-text').textContent = translations[currentLanguage].loading;
+          updateCountdown(); // Update countdown text
+        }
+        
         function fetchNavItems() {
           fetch('https://script.google.com/macros/s/AKfycbwRsZhyEsERd2QAPJDVNOEKcIFf96C2EoL2N4n8nMErJpq-8FY9Th6JgrDoW_bU8Dewew/exec')
             .then(response => response.json())
@@ -431,6 +540,10 @@
                 navList.appendChild(li);
               });
               initializeNavEffects();
+              updateContent(); // Update content with the current language
+              document.documentElement.setAttribute('data-theme', currentMode);
+              document.body.setAttribute('data-theme', currentMode);
+              updateModeIcon();
               hideLoadingOverlay();
             })
             .catch(error => {
@@ -438,8 +551,7 @@
               hideLoadingOverlay();
             });
         }
-  
-        // Function to hide loading overlay with fade out animation
+        
         function hideLoadingOverlay() {
           const overlay = document.getElementById('loadingOverlay');
           overlay.style.animation = 'fadeOut 0.5s ease-out forwards';
@@ -447,112 +559,45 @@
             overlay.style.display = 'none';
           }, 500);
         }
-  
-        // Call the function to fetch nav items when the page loads
-        document.addEventListener('DOMContentLoaded', fetchNavItems);
-  
-        function initializeNavEffects() {
-          const navItems = document.querySelectorAll('.nav-item');
-          navItems.forEach((item, index) => {
-            item.style.opacity = '0';
-            item.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-              item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-              item.style.opacity = '1';
-              item.style.transform = 'translateY(0)';
-            }, index * 100);
-          });
-  
-          const navLinks = document.querySelectorAll('.nav-link');
-          navLinks.forEach(link => {
-            link.addEventListener('mousemove', (e) => {
-              const rect = link.getBoundingClientRect();
-              const x = e.clientX - rect.left;
-              const y = e.clientY - rect.top;
-              link.style.background = `radial-gradient(circle at ${x}px ${y}px, var(--hover-color), var(--primary-color))`;
-            });
-            link.addEventListener('mouseleave', () => {
-              link.style.background = '';
-            });
-          });
-  
-          // Add touch events for mobile devices
-          if ('ontouchstart' in window) {
-            navLinks.forEach(link => {
-              link.addEventListener('touchstart', () => {
-                link.style.background = `linear-gradient(135deg, var(--hover-color) 0%, var(--primary-color) 100%)`;
-                link.style.color = 'white';
-              });
-              link.addEventListener('touchend', () => {
-                setTimeout(() => {
-                  link.style.background = '';
-                  link.style.color = '';
-                }, 300);
-              });
-            });
-          }
-        }
-  
-        function isElementInViewport(el) {
-          const rect = el.getBoundingClientRect();
-          return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-          );
-        }
-  
-        function onScroll() {
-          const navItems = document.querySelectorAll('.nav-item');
-          navItems.forEach(item => {
-            if (isElementInViewport(item)) {
-              item.classList.add('animate');
-            }
-          });
-        }
-  
-        window.addEventListener('scroll', onScroll);
-        window.addEventListener('resize', onScroll);
-        onScroll();
-  
-        // Countdown Timer
+        
+        document.addEventListener('DOMContentLoaded', () => {
+          document.documentElement.setAttribute('data-theme', currentMode);
+          document.body.setAttribute('data-theme', currentMode);
+          updateModeIcon();
+          fetchNavItems();
+          document.getElementById('languageToggle').addEventListener('click', switchLanguage);
+          document.getElementById('modeToggle').addEventListener('click', switchMode);
+        });
+        
         function updateCountdown() {
           const examDate = new Date("2025-05-17T00:00:00+08:00");
           const now = new Date();
           const difference = examDate - now;
-  
+
           const days = Math.floor(difference / (1000 * 60 * 60 * 24));
           const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
           const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-  
-          document.getElementById('countdown').innerHTML = `114會考倒數: ${days}天 ${hours}小時 ${minutes}分 ${seconds}秒`;
+
+          document.getElementById('countdown').innerHTML = `${translations[currentLanguage].countdown} ${days}${currentLanguage === 'zh' ? '天' : 'd'} ${hours}${currentLanguage === 'zh' ? '小時' : 'h'} ${minutes}${currentLanguage === 'zh' ? '分' : 'm'} ${seconds}${currentLanguage === 'zh' ? '秒' : 's'}`;
         }
-  
-        setInterval(updateCountdown, 1000);
-        updateCountdown(); // Initial call to avoid delay
-  
-        // 防止複製
+        
         document.addEventListener('copy', function(e) {
           e.preventDefault();
           return false;
         });
   
-        // 防止截圖 (僅適用於部分瀏覽器)
         document.addEventListener('keyup', function(e) {
           if (e.key == 'PrintScreen') {
-            navigator.clipboard.writeText('');
-            alert('截圖功能已被禁用');
+              navigator.clipboard.writeText('');
+              alert('截圖功能已被禁用');
           }
         });
   
-        // 防止右鍵點擊
         document.addEventListener('contextmenu', function(e) {
           e.preventDefault();
         });
   
-        // 防止拖曳選擇文字
         document.onselectstart = function() {
           return false;
         };
