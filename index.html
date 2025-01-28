@@ -1,605 +1,614 @@
 <html><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="會考資訊整合平台 - 提供即時的查榜資訊、分數序位參考，以及系統異常回報。">
-    <title>TYCTW會考資訊整合平台</title>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');
-    
-      :root {
-        /* Light mode variables */
-        --primary-color: #4a90e2;
-        --secondary-color: #50c878;
-        --background-color: #f0f4f8;
-        --text-color: #333;
-        --hover-color: #ff6b6b;
-        --accent-color: #FF6600;
-        --new-color: #FF1493;
-        --newest-color: #32CD32;
-        --latest-color: #1E90FF;
-        --container-bg: rgba(255, 255, 255, 0.95);
-        --footer-bg: rgba(240, 240, 240, 0.8);
-      }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="會考資訊整合平台 - 提供即時的查榜資訊、分數序位參考，以及系統異常回報。">
+  <title>TYCTW會考資訊整合平台</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');
+  
+    :root {
+      /* Light mode variables */
+      --primary-color: #4a90e2;
+      --secondary-color: #50c878;
+      --background-color: #f0f4f8;
+      --text-color: #333;
+      --hover-color: #ff6b6b;
+      --accent-color: #FF6600;
+      --new-color: #FF1493;
+      --newest-color: #32CD32;
+      --latest-color: #1E90FF;
+      --container-bg: rgba(255, 255, 255, 0.95);
+      --footer-bg: rgba(240, 240, 240, 0.8);
+    }
 
-      [data-theme="dark"] {
-        /* Dark mode variables */
-        --primary-color: #6ab0ff;
-        --secondary-color: #70e898;
-        --background-color: #121212;
-        --text-color: #f0f0f0;
-        --hover-color: #ff8b8b;
-        --accent-color: #FF8C40;
-        --new-color: #FF69B4;
-        --newest-color: #32CD32;
-        --latest-color: #4169E1;
-        --container-bg: rgba(30, 30, 30, 0.95);
-        --footer-bg: rgba(18, 18, 18, 0.8);
-      }
+    [data-theme="dark"] {
+      /* Dark mode variables */
+      --primary-color: #6ab0ff;
+      --secondary-color: #70e898;
+      --background-color: #121212;
+      --text-color: #f0f0f0;
+      --hover-color: #ff8b8b;
+      --accent-color: #FF8C40;
+      --new-color: #FF69B4;
+      --newest-color: #32CD32;
+      --latest-color: #4169E1;
+      --container-bg: rgba(30, 30, 30, 0.95);
+      --footer-bg: rgba(18, 18, 18, 0.8);
+    }
 
-      body {
-        background: var(--background-color);
-        color: var(--text-color);
-        font-family: 'Noto Sans TC', Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-      }
+    body {
+      background: var(--background-color);
+      color: var(--text-color);
+      font-family: 'Noto Sans TC', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-      .countdown-banner {
-        background-color: var(--primary-color);
-        color: white;
-        text-align: center;
-        padding: 10px;
-        width: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 1000;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      }
-    
-      .countdown-banner p {
-        margin: 0;
-        font-size: 1.2rem;
-        font-weight: bold;
-      }
-    
-      .language-switch {
-        position: fixed;
-        top: 10px;
-        right: 20px;
-        z-index: 1001;
-      }
+    .countdown-banner {
+      background-color: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+  
+    .countdown-banner p {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  
+    .language-switch {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      z-index: 1001;
+    }
 
-      .mode-switch {
-        position: fixed;
-        top: 10px;
-        right: 80px;
-        z-index: 1001;
-      }
-      
-      #languageToggle, #modeToggle {
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background-color 0.3s ease;
-      }
-      
-      #languageToggle:hover, #modeToggle:hover {
-        background-color: var(--hover-color);
-      }
+    .mode-switch {
+      position: fixed;
+      top: 10px;
+      right: 80px;
+      z-index: 1001;
+    }
     
+    #languageToggle, #modeToggle {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    
+    #languageToggle:hover, #modeToggle:hover {
+      background-color: var(--hover-color);
+    }
+  
+    .container {
+      background-color: var(--container-bg);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.07);
+      padding: 4rem 3rem;
+      max-width: 1300px;
+      width: 95%;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      margin: 3rem 0;
+      margin-top: 5rem;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      opacity: 0.05;
+      z-index: -1;
+      animation: gradientAnimation 15s ease infinite;
+    }
+
+    @keyframes gradientAnimation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    h1 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 3rem;
+      font-size: 3rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      position: relative;
+      letter-spacing: 1px;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 2px;
+    }
+
+    .nav-list {
+      list-style-type: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 4rem;
+    }
+
+    .nav-item {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 3rem;
+    }
+
+    .nav-item:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .nav-link {
+      background-color: var(--container-bg);
+      display: flex;
+      flex-direction: column;
+      padding: 2.5rem;
+      border-radius: 15px;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    [data-theme="dark"] .nav-link {
+      background-color: #1e1e1e;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .nav-link:hover::before {
+      left: 100%;
+    }
+
+    .nav-link:hover {
+      background: linear-gradient(135deg, var(--hover-color) 0%, var(--primary-color) 100%);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .nav-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1.2rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-description {
+      color: var(--text-color);
+      opacity: 0.7;
+      margin-top: auto;
+      transition: color 0.3s ease;
+      line-height: 1.6;
+    }
+
+    .nav-link:hover .nav-description {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.8rem;
+      color: var(--primary-color);
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .nav-link:hover .icon {
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      color: rgb(255, 106, 0);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      animation: pulse 2s infinite;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .new-badge { 
+      background-color: var(--accent-color);
+      color: #FFFFFF; 
+    }
+    .newest-badge { 
+      background-color: var(--new-color);
+      color: #FFFFFF; 
+    }
+    .latest-badge { 
+      background-color: var(--newest-color);
+      color: #000000; 
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.8); 
+    }
+    .brand-new-badge { 
+      background-color: var(--latest-color);
+      color: #FFFFFF; 
+    }
+  
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+      50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.7); }
+      100% { transform: scale(1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+    }
+  
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: var(--text-color);
+      width: 100%;
+      background-color: var(--footer-bg);
+      margin-top: 2rem;
+    }
+  
+    @media (max-width: 768px) {
       .container {
-        background-color: var(--container-bg);
-        border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.07);
-        padding: 4rem 3rem;
-        max-width: 1300px;
-        width: 95%;
-        position: relative;
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-        margin: 3rem 0;
-        margin-top: 5rem;
-      }
-
-      .container::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(45deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-        opacity: 0.05;
-        z-index: -1;
-        animation: gradientAnimation 15s ease infinite;
-      }
-
-      @keyframes gradientAnimation {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-
-      h1 {
-        color: var(--primary-color);
-        text-align: center;
-        margin-bottom: 3rem;
-        font-size: 3rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        position: relative;
-        letter-spacing: 1px;
-      }
-
-      h1::after {
-        content: '';
-        position: absolute;
-        bottom: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 4px;
-        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-        border-radius: 2px;
-      }
-
-      .nav-list {
-        list-style-type: none;
-        padding: 0;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 4rem;
-      }
-
-      .nav-item {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        margin-bottom: 3rem;
-      }
-
-      .nav-item:hover {
-        transform: translateY(-5px) scale(1.02);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-      }
-
-      .nav-link {
-        background-color: var(--container-bg);
-        display: flex;
-        flex-direction: column;
-        padding: 2.5rem;
-        border-radius: 15px;
-        color: var(--text-color);
-        text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        position: relative;
-        overflow: hidden;
-        height: 100%;
-        border: 1px solid rgba(0,0,0,0.1);
-      }
-
-      [data-theme="dark"] .nav-link {
-        background-color: #1e1e1e;
-        border: 1px solid rgba(255,255,255,0.1);
-      }
-
-      .nav-link::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
         width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: 0.5s;
-      }
-
-      .nav-link:hover::before {
-        left: 100%;
-      }
-
-      .nav-link:hover {
-        background: linear-gradient(135deg, var(--hover-color) 0%, var(--primary-color) 100%);
-        color: white;
-        transform: translateY(-3px);
-      }
-
-      .nav-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-bottom: 1.2rem;
-        transition: color 0.3s ease;
-      }
-
-      .nav-description {
-        color: var(--text-color);
-        opacity: 0.7;
-        margin-top: auto;
-        transition: color 0.3s ease;
-        line-height: 1.6;
-      }
-
-      .nav-link:hover .nav-description {
-        color: rgba(255,255,255,0.9);
-      }
-
-      .icon {
-        font-size: 2.5rem;
-        margin-bottom: 1.8rem;
-        color: var(--primary-color);
-        transition: color 0.3s ease, transform 0.3s ease;
-      }
-
-      .nav-link:hover .icon {
-        color: white;
-        transform: scale(1.1);
-      }
-
-      .badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        color: rgb(255, 106, 0);
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: bold;
-        animation: pulse 2s infinite;
-        box-shadow: 0 0 10px rgba(255,255,255,0.5);
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-      }
-
-      .new-badge { 
-        background-color: var(--accent-color);
-        color: #FFFFFF; 
-      }
-      .newest-badge { 
-        background-color: var(--new-color);
-        color: #FFFFFF; 
-      }
-      .latest-badge { 
-        background-color: var(--newest-color);
-        color: #000000; 
-        text-shadow: 1px 1px 2px rgba(255,255,255,0.8); 
-      }
-      .brand-new-badge { 
-        background-color: var(--latest-color);
-        color: #FFFFFF; 
-      }
-    
-      @keyframes pulse {
-        0% { transform: scale(1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.7); }
-        100% { transform: scale(1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
-      }
-    
-      .footer {
-        text-align: center;
-        padding: 20px;
-        font-size: 0.9rem;
-        color: var(--text-color);
-        width: 100%;
-        background-color: var(--footer-bg);
-        margin-top: 2rem;
-      }
-    
-      @media (max-width: 768px) {
-        .container {
-          width: 100%;
-          padding: 2rem 1rem;
-          margin: 1rem 0;
-          border-radius: 0;
-          margin-top: 4rem;
-        }
-    
-        h1 {
-          font-size: 2rem;
-          margin-bottom: 2rem;
-        }
-    
-        .nav-list {
-          grid-template-columns: 1fr;
-          gap: 2rem;
-        }
-    
-        .nav-item {
-          margin-bottom: 2rem;
-        }
-    
-        .nav-link {
-          padding: 1.5rem;
-        }
-    
-        .nav-title {
-          font-size: 1.2rem;
-        }
-    
-        .nav-description {
-          font-size: 0.9rem;
-        }
-    
-        .icon {
-          font-size: 2rem;
-          margin-bottom: 1rem;
-        }
-    
-        .badge {
-          top: 10px;
-          right: 10px;
-          font-size: 0.7rem;
-          padding: 3px 8px;
-        }
-    
-        .countdown-banner p {
-          font-size: 1rem;
-        }
-      }
-    
-      @media (min-width: 769px) and (max-width: 1024px) {
-        .container {
-          padding: 3rem 2rem;
-          margin-top: 5rem;
-        }
-    
-        .nav-list {
-          grid-template-columns: repeat(2, 1fr);
-          gap: 3rem;
-        }
-    
-        h1 {
-          font-size: 2.5rem;
-        }
-      }
-    
-      @supports (-webkit-overflow-scrolling: touch) {
-        body {
-          -webkit-overflow-scrolling: touch;
-        }
-      }
-    
-      .coming-soon {
-        text-align: center;
-        padding: 30px;
-        background-color: var(--container-bg);
-        border-radius: 15px;
+        padding: 2rem 1rem;
+        margin: 1rem 0;
+        border-radius: 0;
         margin-top: 4rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       }
-    
-      .coming-soon h2 {
-        color: var(--primary-color);
-        font-size: 2.5rem;
+  
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+      }
+  
+      .nav-list {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+  
+      .nav-item {
+        margin-bottom: 2rem;
+      }
+  
+      .nav-link {
+        padding: 1.5rem;
+      }
+  
+      .nav-title {
+        font-size: 1.2rem;
+      }
+  
+      .nav-description {
+        font-size: 0.9rem;
+      }
+  
+      .icon {
+        font-size: 2rem;
         margin-bottom: 1rem;
       }
+  
+      .badge {
+        top: 10px;
+        right: 10px;
+        font-size: 0.7rem;
+        padding: 3px 8px;
+      }
+  
+      .countdown-banner p {
+        font-size: 1rem;
+      }
+    }
+  
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .container {
+        padding: 3rem 2rem;
+        margin-top: 5rem;
+      }
+  
+      .nav-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 3rem;
+      }
+  
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
+  
+    @supports (-webkit-overflow-scrolling: touch) {
+      body {
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+  
+    .coming-soon {
+      text-align: center;
+      padding: 30px;
+      background-color: var(--container-bg);
+      border-radius: 15px;
+      margin-top: 4rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+  
+    .coming-soon h2 {
+      color: var(--primary-color);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+  
+    .coming-soon p {
+      font-size: 1.3rem;
+      color: var(--text-color);
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(18, 18, 18, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .loading-overlay[data-theme="light"] {
+      background-color: rgba(240, 240, 240, 0.9);
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--primary-color);
+      border-top: 5px solid var(--secondary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: var(--primary-color);
+      font-size: 1.2rem;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  </head>
+  <body data-theme="dark">
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">載入中...</p>
+      </div>
+    </div>
+
+    <div class="countdown-banner">
+      <p id="countdown">114會考倒數: 載入中...</p>
+    </div>
     
-      .coming-soon p {
-        font-size: 1.3rem;
-        color: var(--text-color);
-      }
+    <div class="language-switch">
+      <button id="languageToggle">EN</button>
+    </div>
+    <div class="mode-switch">
+      <button id="modeToggle"><i class="fas fa-sun"></i></button>
+    </div>
   
-      .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(18, 18, 18, 0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        transition: opacity 0.5s ease-out;
-      }
-  
-      .loading-overlay[data-theme="light"] {
-        background-color: rgba(240, 240, 240, 0.9);
-      }
-  
-      .loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 5px solid var(--primary-color);
-        border-top: 5px solid var(--secondary-color);
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-  
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-  
-      .loading-text {
-        color: var(--primary-color);
-        font-size: 1.2rem;
-        margin-top: 20px;
-        font-weight: bold;
-      }
-  
-      @keyframes fadeOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
-      }
-  
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    </head>
-    <body data-theme="dark">
-      <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-content">
-          <div class="loading-spinner"></div>
-          <p class="loading-text">載入中...</p>
-        </div>
+    <div class="container">
+      <h1><i class="fas fa-graduation-cap"></i> TYCTW會考資訊整合平台</h1>
+      <nav>
+           <ul class="nav-list" id="navList">
+             <!-- Navigation items will be dynamically inserted here -->
+           </ul>
+      </nav>
+      <div class="coming-soon">
+        <h2><i class="fas fa-rocket"></i> 更多功能即將推出！</h2>
+        <p>我們正在不斷努力，為您開發更多有用的工具和資源。敬請期待！</p>
       </div>
+    </div>
   
-      <div class="countdown-banner">
-        <p id="countdown">114會考倒數: 載入中...</p>
-      </div>
+    <footer class="footer">
+      <p>&copy; 2025 會考資訊整合平台. All rights reserved.</p>
+      <p>由 TYCTW會考落點分析平台 設計與維護</p>
+    </footer>
+  
+    <script>
+      let currentLanguage = 'zh'; // Default language is Chinese
+      let currentMode = 'dark'; // Default mode is now dark
       
-      <div class="language-switch">
-        <button id="languageToggle">EN</button>
-      </div>
-      <div class="mode-switch">
-        <button id="modeToggle"><i class="fas fa-sun"></i></button>
-      </div>
-    
-      <div class="container">
-        <h1><i class="fas fa-graduation-cap"></i> TYCTW會考資訊整合平台</h1>
-        <nav>
-             <ul class="nav-list" id="navList">
-               <!-- Navigation items will be dynamically inserted here -->
-             </ul>
-        </nav>
-        <div class="coming-soon">
-          <h2><i class="fas fa-rocket"></i> 更多功能即將推出！</h2>
-          <p>我們正在不斷努力，為您開發更多有用的工具和資源。敬請期待！</p>
-        </div>
-      </div>
-    
-      <footer class="footer">
-        <p>&copy; 2025 會考資訊整合平台. All rights reserved.</p>
-        <p>由 TYCTW會考落點分析平台 設計與維護</p>
-      </footer>
-    
-      <script>
-        let currentLanguage = 'zh'; // Default language is Chinese
-        let currentMode = 'dark'; // Default mode is now dark
-        
-        const translations = {
-          zh: {
-            countdown: '114會考倒數:',
-            title: 'TYCTW會考資訊整合平台',
-            comingSoonTitle: '更多功能即將推出！',
-            comingSoonDesc: '我們正在不斷努力，為您開發更多有用的工具和資源。敬請期待！',
-            footer1: '會考資訊整合平台. All rights reserved.',
-            footer2: '由 TYCTW會考落點分析平台 設計與維護',
-            loading: '載入中...'
-          },
-          en: {
-            countdown: 'Countdown to 114 Exam:',
-            title: 'TYCTW Exam Information Integration Platform',
-            comingSoonTitle: 'More features coming soon!',
-            comingSoonDesc: 'We are constantly working to develop more useful tools and resources for you. Stay tuned!',
-            footer1: 'Exam Information Integration Platform. All rights reserved.',
-            footer2: 'Designed and maintained by TYCTW Exam Score Analysis Platform',
-            loading: 'Loading...'
-          }
-        };
-        
-        function switchLanguage() {
-          currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh';
-          updateContent();
-          document.getElementById('languageToggle').textContent = currentLanguage === 'zh' ? 'EN' : '中';
+      const translations = {
+        zh: {
+          countdown: '114會考倒數:',
+          title: 'TYCTW會考資訊整合平台',
+          comingSoonTitle: '更多功能即將推出！',
+          comingSoonDesc: '我們正在不斷努力，為您開發更多有用的工具和資源。敬請期待！',
+          footer1: '會考資訊整合平台. All rights reserved.',
+          footer2: '由 TYCTW會考落點分析平台 設計與維護',
+          loading: '載入中...'
+        },
+        en: {
+          countdown: 'Countdown to 114 Exam:',
+          title: 'TYCTW Exam Information Integration Platform',
+          comingSoonTitle: 'More features coming soon!',
+          comingSoonDesc: 'We are constantly working to develop more useful tools and resources for you. Stay tuned!',
+          footer1: 'Exam Information Integration Platform. All rights reserved.',
+          footer2: 'Designed and maintained by TYCTW Exam Score Analysis Platform',
+          loading: 'Loading...'
         }
-        
-        function switchMode() {
-          currentMode = currentMode === 'dark' ? 'light' : 'dark';
-          document.documentElement.setAttribute('data-theme', currentMode);
-          document.body.setAttribute('data-theme', currentMode);
-          updateModeIcon();
-        }
-        
-        function updateModeIcon() {
-          const modeIcon = document.querySelector('#modeToggle i');
-          modeIcon.className = currentMode === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
-        
-        function updateContent() {
-          document.querySelector('h1').innerHTML = `<i class="fas fa-graduation-cap"></i> ${translations[currentLanguage].title}`;
-          document.querySelector('.coming-soon h2').innerHTML = `<i class="fas fa-rocket"></i> ${translations[currentLanguage].comingSoonTitle}`;
-          document.querySelector('.coming-soon p').textContent = translations[currentLanguage].comingSoonDesc;
-          document.querySelector('.footer p:first-child').textContent = `© 2024 ${translations[currentLanguage].footer1}`;
-          document.querySelector('.footer p:last-child').textContent = translations[currentLanguage].footer2;
-          document.querySelector('.loading-text').textContent = translations[currentLanguage].loading;
-          updateCountdown(); // Update countdown text
-        }
-        
-        function fetchNavItems() {
-          fetch('https://script.google.com/macros/s/AKfycbwRsZhyEsERd2QAPJDVNOEKcIFf96C2EoL2N4n8nMErJpq-8FY9Th6JgrDoW_bU8Dewew/exec')
-            .then(response => response.json())
-            .then(data => {
-              const navList = document.getElementById('navList');
-              data.forEach(item => {
-                const li = document.createElement('li');
-                li.className = 'nav-item';
-                li.innerHTML = `
-                  <a href="${item.link}" class="nav-link">
-                    <i class="${item.icon} icon"></i>
-                    <span class="nav-title">${item.title}</span>
-                    <p class="nav-description">${item.description}</p>
-                    ${item.badge ? `<span class="badge ${item.badge}-badge">${item.badge}</span>` : ''}
-                  </a>
-                `;
-                navList.appendChild(li);
-              });
-              initializeNavEffects();
-              updateContent(); // Update content with the current language
-              document.documentElement.setAttribute('data-theme', currentMode);
-              document.body.setAttribute('data-theme', currentMode);
-              updateModeIcon();
-              hideLoadingOverlay();
-            })
-            .catch(error => {
-              console.error('Error fetching nav items:', error);
-              hideLoadingOverlay();
+      };
+      
+      function switchLanguage() {
+        currentLanguage = currentLanguage === 'zh' ? 'en' : 'zh';
+        updateContent();
+        document.getElementById('languageToggle').textContent = currentLanguage === 'zh' ? 'EN' : '中';
+      }
+      
+      function switchMode() {
+        currentMode = currentMode === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', currentMode);
+        document.body.setAttribute('data-theme', currentMode);
+        updateModeIcon();
+      }
+      
+      function updateModeIcon() {
+        const modeIcon = document.querySelector('#modeToggle i');
+        modeIcon.className = currentMode === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+      
+      function updateContent() {
+        document.querySelector('h1').innerHTML = `<i class="fas fa-graduation-cap"></i> ${translations[currentLanguage].title}`;
+        document.querySelector('.coming-soon h2').innerHTML = `<i class="fas fa-rocket"></i> ${translations[currentLanguage].comingSoonTitle}`;
+        document.querySelector('.coming-soon p').textContent = translations[currentLanguage].comingSoonDesc;
+        document.querySelector('.footer p:first-child').textContent = `© 2024 ${translations[currentLanguage].footer1}`;
+        document.querySelector('.footer p:last-child').textContent = translations[currentLanguage].footer2;
+        document.querySelector('.loading-text').textContent = translations[currentLanguage].loading;
+        updateCountdown(); // Update countdown text
+      }
+      
+      function fetchNavItems() {
+        fetch('https://script.google.com/macros/s/AKfycbwRsZhyEsERd2QAPJDVNOEKcIFf96C2EoL2N4n8nMErJpq-8FY9Th6JgrDoW_bU8Dewew/exec')
+          .then(response => response.json())
+          .then(data => {
+            const navList = document.getElementById('navList');
+            data.forEach(item => {
+              const li = document.createElement('li');
+              li.className = 'nav-item';
+              li.innerHTML = `
+                <a href="${item.link}" class="nav-link">
+                  <i class="${item.icon} icon"></i>
+                  <span class="nav-title">${item.title}</span>
+                  <p class="nav-description">${item.description}</p>
+                  ${item.badge ? `<span class="badge ${item.badge}-badge">${item.badge}</span>` : ''}
+                </a>
+              `;
+              navList.appendChild(li);
             });
-        }
-        
-        function hideLoadingOverlay() {
-          const overlay = document.getElementById('loadingOverlay');
-          overlay.style.animation = 'fadeOut 0.5s ease-out forwards';
-          setTimeout(() => {
-            overlay.style.display = 'none';
-          }, 500);
-        }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-          document.documentElement.setAttribute('data-theme', currentMode);
-          document.body.setAttribute('data-theme', currentMode);
-          updateModeIcon();
-          fetchNavItems();
-          document.getElementById('languageToggle').addEventListener('click', switchLanguage);
-          document.getElementById('modeToggle').addEventListener('click', switchMode);
-        });
-        
-        function updateCountdown() {
-          const examDate = new Date("2025-05-17T00:00:00+08:00");
-          const now = new Date();
-          const difference = examDate - now;
+            initializeNavEffects();
+            updateContent(); // Update content with the current language
+            document.documentElement.setAttribute('data-theme', currentMode);
+            document.body.setAttribute('data-theme', currentMode);
+            updateModeIcon();
+            hideLoadingOverlay();
+          })
+          .catch(error => {
+            console.error('Error fetching nav items:', error);
+            hideLoadingOverlay();
+          });
+      }
+      
+      function hideLoadingOverlay() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.style.animation = 'fadeOut 0.5s ease-out forwards';
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 500);
+      }
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        document.documentElement.setAttribute('data-theme', currentMode);
+        document.body.setAttribute('data-theme', currentMode);
+        updateModeIcon();
+        fetchNavItems();
+        document.getElementById('languageToggle').addEventListener('click', switchLanguage);
+        document.getElementById('modeToggle').addEventListener('click', switchMode);
+      });
+      
+      function updateCountdown() {
+  const examDate = new Date("2025-05-17T00:00:00+08:00");
+  const now = new Date();
+  const difference = examDate - now;
 
-          const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-          const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+  const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-          document.getElementById('countdown').innerHTML = `${translations[currentLanguage].countdown} ${days}${currentLanguage === 'zh' ? '天' : 'd'} ${hours}${currentLanguage === 'zh' ? '小時' : 'h'} ${minutes}${currentLanguage === 'zh' ? '分' : 'm'} ${seconds}${currentLanguage === 'zh' ? '秒' : 's'}`;
+  const countdownElement = document.getElementById('countdown');
+  if (countdownElement) {
+    countdownElement.textContent = `${translations[currentLanguage].countdown} ${days}${currentLanguage === 'zh' ? '天' : 'd'} ${hours}${currentLanguage === 'zh' ? '小時' : 'h'} ${minutes}${currentLanguage === 'zh' ? '分' : 'm'} ${seconds}${currentLanguage === 'zh' ? '秒' : 's'}`;
+  }
+}
+
+// Start the countdown when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+  updateCountdown();
+  // Update countdown every second
+  setInterval(updateCountdown, 1000);
+});
+      document.addEventListener('copy', function(e) {
+        e.preventDefault();
+        return false;
+      });
+
+      document.addEventListener('keyup', function(e) {
+        if (e.key == 'PrintScreen') {
+            navigator.clipboard.writeText('');
+            alert('截圖功能已被禁用');
         }
-        
-        document.addEventListener('copy', function(e) {
-          e.preventDefault();
-          return false;
-        });
-  
-        document.addEventListener('keyup', function(e) {
-          if (e.key == 'PrintScreen') {
-              navigator.clipboard.writeText('');
-              alert('截圖功能已被禁用');
-          }
-        });
-  
-        document.addEventListener('contextmenu', function(e) {
-          e.preventDefault();
-        });
-  
-        document.onselectstart = function() {
-          return false;
-        };
-      </script>
-    </body></html>
+      });
+
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+
+      document.onselectstart = function() {
+        return false;
+      };
+    </script>
+  </body></html>
