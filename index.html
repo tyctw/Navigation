@@ -1,0 +1,82 @@
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="會考資訊整合平台 - 提供即時的查榜資訊、分數序位參考，以及系統異常回報。">
+  <title>TYCTW會考資訊整合平台</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-theme="dark">
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">載入中...</p>
+    </div>
+  </div>
+
+  <!-- Top right controls -->
+  <div class="top-controls">
+    <button id="languageToggle">EN</button>
+    <button id="modeToggle"><i class="fas fa-sun"></i></button>
+  </div>
+
+  <!-- Hero section -->
+  <header class="hero">
+    <div class="hero-content">
+      <h1><i class="fas fa-graduation-cap"></i> TYCTW會考資訊整合平台</h1>
+      <div id="countdownContainer">
+        <p id="countdown">114會考倒數: 載入中...</p>
+      </div>
+    </div>
+    <!-- Animated SVG background -->
+    <svg class="hero-bg" viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="gradient1" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="var(--primary-color)" />
+          <stop offset="100%" stop-color="var(--secondary-color)" />
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="800" height="300" fill="url(#gradient1)" opacity="0.2">
+        <animateTransform attributeName="transform" attributeType="XML" type="rotate" 
+                        from="0 400 150" to="360 400 150" 
+                        dur="30s" repeatCount="indefinite"/>
+      </rect>
+    </svg>
+  </header>
+
+  <!-- Main content -->
+  <main class="main-content">
+    <!-- Search -->
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="搜尋功能或工具...">
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+      <ul class="nav-list" id="navList">
+        <!-- Navigation items will be dynamically inserted here -->
+      </ul>
+    </nav>
+
+    <!-- Coming Soon Section -->
+    <section class="coming-soon">
+      <h2><i class="fas fa-rocket"></i> 更多功能即將推出！</h2>
+      <p>我們正在不斷努力，為您開發更多有用的工具和資源。敬請期待！</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 會考資訊整合平台. All rights reserved.</p>
+    <p>由 TYCTW會考落點分析平台 設計與維護</p>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop"><i class="fas fa-arrow-up"></i></button>
+
+  <script src="script.js"></script>
+</body>
+</html>
