@@ -4,7 +4,7 @@ let currentMode = localStorage.getItem('currentMode') || 'dark';
 
 const translations = {
   zh: {
-    countdown: '114會考倒數:',
+    countdown: '115會考倒數:',
     title: 'TYCTW會考資訊整合平台',
     comingSoonTitle: '更多功能即將推出！',
     comingSoonDesc: '我們正在不斷努力，為您開發更多有用的工具和資源。敬請期待！',
@@ -248,7 +248,7 @@ function hideLoadingOverlay() {
 }
 
 function updateCountdown() {
-  const examDate = new Date("2025-05-17T00:00:00+08:00");
+  const examDate = new Date("2026-05-22T00:00:00+08:00");
   const now = new Date();
   const difference = examDate - now;
 
