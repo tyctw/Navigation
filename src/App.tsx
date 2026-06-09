@@ -286,23 +286,43 @@ export default function App() {
 
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
-    
-    if (adminPassword === correctPassword) {
-      setIsAdmin(true);
-      setShowAdminLogin(false);
-      setAdminPassword('');
-      try {
-        await supabase.from('admin_logs').insert([{ status: 'success', user_agent: navigator.userAgent }]);
-      } catch (e) {
-        console.error('Log failed', e);
+    if (!adminPassword.trim()) return;
+
+    try {
+      // 驗證後端資料庫中的密碼
+      const { data, error } = await supabase
+        .from('admin_settings')
+        .select('*')
+        .eq('password', adminPassword)
+        .limit(1);
+
+      if (data && data.length > 0) {
+        setIsAdmin(true);
+        setShowAdminLogin(false);
+        setAdminPassword('');
+        try {
+          await supabase.from('admin_logs').insert([{ status: 'success', user_agent: navigator.userAgent }]);
+        } catch (e) {
+          console.error('Log failed', e);
+        }
+      } else {
+        alert('密碼錯誤');
+        try {
+          await supabase.from('admin_logs').insert([{ status: 'failed', user_agent: navigator.userAgent }]);
+        } catch (e) {
+          console.error('Log failed', e);
+        }
       }
-    } else {
-      alert('密碼錯誤');
-      try {
-        await supabase.from('admin_logs').insert([{ status: 'failed', user_agent: navigator.userAgent }]);
-      } catch (e) {
-        console.error('Log failed', e);
+    } catch (err) {
+      console.error('Login fallback error', err);
+      // Fallback
+      const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+      if (adminPassword === correctPassword) {
+        setIsAdmin(true);
+        setShowAdminLogin(false);
+        setAdminPassword('');
+      } else {
+        alert('密碼錯誤或連線失敗');
       }
     }
   };
@@ -2539,7 +2559,19 @@ ALTER TABLE public.important_events ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow select" ON public.important_events FOR SELECT USING (true);
 CREATE POLICY "Allow insert" ON public.important_events FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow update" ON public.important_events FOR UPDATE USING (true);
-CREATE POLICY "Allow delete" ON public.important_events FOR DELETE USING (true);`}
+CREATE POLICY "Allow delete" ON public.important_events FOR DELETE USING (true);
+
+CREATE TABLE public.admin_settings (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  password text NOT NULL
+);
+
+ALTER TABLE public.admin_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow select" ON public.admin_settings FOR SELECT USING (true);
+CREATE POLICY "Allow update" ON public.admin_settings FOR UPDATE USING (true);
+
+INSERT INTO public.admin_settings (password) VALUES ('admin123');
+`}
                     </pre>
                   </div>
                 )}
