@@ -667,9 +667,10 @@ export default function App() {
       </div>
 
       {/* Modern Floating Header Navigation */}
-      <div className="sticky top-4 sm:top-6 z-50 px-4 sm:px-6 w-full max-w-7xl mx-auto transition-all duration-300">
-        <header className="w-full bg-white/60 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-3xl p-3 sm:px-5 sm:py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0">
-          <div className="flex items-center justify-between w-full md:w-auto">
+      <div className="sticky top-4 sm:top-6 z-50 px-4 sm:px-6 w-full max-w-[1400px] mx-auto transition-all duration-300">
+        <header className="w-full bg-white/60 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-3xl p-3 sm:px-5 sm:py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0 relative">
+          {/* Left: Logo & Title */}
+          <div className="flex items-center justify-between w-full md:w-auto shrink-0 relative z-10">
             <div className="flex items-center gap-3 sm:gap-4 shrink-0">
               <div className="relative group shrink-0">
                 <div className="absolute inset-0 bg-indigo-400 rounded-2xl blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-500"></div>
@@ -685,21 +686,6 @@ export default function App() {
                 <p className="text-[8px] sm:text-[10px] font-bold tracking-[0.2em] text-slate-500/80 uppercase mt-0.5 truncate hidden sm:block">
                   Admission Navigation Center
                 </p>
-              </div>
-              
-              <div className="hidden sm:flex items-center bg-slate-100 p-1 rounded-xl ml-2 border border-slate-200/50">
-                <button 
-                  onClick={() => setActiveTab('home')} 
-                  className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all outline-none ${activeTab === 'home' ? 'bg-white text-indigo-700 shadow-[0_2px_8px_rgba(0,0,0,0.06)]' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                  導航首頁
-                </button>
-                <button 
-                  onClick={() => setActiveTab('faq')} 
-                  className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all outline-none ${activeTab === 'faq' ? 'bg-white text-indigo-700 shadow-[0_2px_8px_rgba(0,0,0,0.06)]' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                  常見問答
-                </button>
               </div>
             </div>
             
@@ -732,7 +718,32 @@ export default function App() {
             </div>
           </div>
           
-          <div className="flex flex-col gap-2 w-full md:w-auto mt-1 md:mt-0">
+          {/* Desktop Middle: Navigation Tabs (Centered) */}
+          <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center bg-slate-100/70 p-1.5 rounded-2xl border border-slate-200/60 backdrop-blur-md shadow-sm z-10 w-fit">
+            <button 
+              onClick={() => setActiveTab('home')} 
+              className={`px-6 py-2 rounded-xl text-[15px] font-black tracking-wide transition-all duration-300 outline-none flex items-center gap-2 ${activeTab === 'home' ? 'bg-white text-indigo-600 shadow-[0_2px_15px_-3px_rgba(79,70,229,0.15)] ring-1 ring-indigo-100' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'}`}
+            >
+              <MapPin size={16} className={activeTab === 'home' ? 'text-indigo-500' : 'text-slate-400'} />
+              導航首頁
+            </button>
+            <button 
+              onClick={() => setActiveTab('faq')} 
+              className={`px-6 py-2 rounded-xl text-[15px] font-black tracking-wide transition-all duration-300 outline-none flex items-center gap-2 ${activeTab === 'faq' ? 'bg-white text-indigo-600 shadow-[0_2px_15px_-3px_rgba(79,70,229,0.15)] ring-1 ring-indigo-100' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'}`}
+            >
+              <Info size={16} className={activeTab === 'faq' ? 'text-indigo-500' : 'text-slate-400'} />
+              常見問答
+            </button>
+          </div>
+
+          {/* Fallback for medium screens (between sm and lg) where absolute center might overlap */}
+          <div className="hidden md:flex lg:hidden items-center bg-slate-100/70 p-1 rounded-xl border border-slate-200/60 ml-4 shrink-0 z-10 w-fit">
+            <button onClick={() => setActiveTab('home')} className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${activeTab === 'home' ? 'bg-white text-indigo-600 shadow-sm ring-1 ring-indigo-100' : 'text-slate-500'}`}>導航</button>
+            <button onClick={() => setActiveTab('faq')} className={`px-4 py-1.5 rounded-lg text-sm font-bold transition-all ${activeTab === 'faq' ? 'bg-white text-indigo-600 shadow-sm ring-1 ring-indigo-100' : 'text-slate-500'}`}>問答</button>
+          </div>
+          
+          {/* Right Side Actions */}
+          <div className="flex flex-col gap-2 w-full md:w-auto mt-1 md:mt-0 relative z-10 shrink-0">
             <div className="flex justify-end items-center gap-3 w-full md:w-auto">
               <div className="hidden lg:flex items-center gap-2 bg-emerald-50/90 px-4 py-2.5 sm:py-3 rounded-2xl border border-emerald-100/50 shadow-sm">
                 <span className="relative flex h-2 w-2">
@@ -767,7 +778,7 @@ export default function App() {
                 title="基北區積分試算"
               >
                 <Calculator size={18} className="shrink-0" />
-                <span className="hidden lg:block ml-2 text-sm font-bold truncate">各區會考積分試算</span>
+                <span className="hidden xl:block ml-2 text-sm font-bold truncate">各區會考積分試算</span>
               </button>
               <button
                 onClick={handleShare}
@@ -783,17 +794,20 @@ export default function App() {
 
       {/* Main Strategic Viewport */}
       <main className="flex-grow w-full max-w-6xl mx-auto p-4 sm:p-6 md:p-8 flex flex-col gap-8 relative">
-        <div className="flex sm:hidden items-center bg-slate-100 p-1.5 rounded-2xl border border-slate-200/50 mb-2 w-full">
+        {/* Mobile Navigation Tabs */}
+        <div className="flex md:hidden items-center bg-slate-100 p-1.5 rounded-2xl border border-slate-200/50 mb-2 w-full shadow-inner sticky top-24 z-40">
           <button 
             onClick={() => setActiveTab('home')} 
-            className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all outline-none ${activeTab === 'home' ? 'bg-white text-indigo-700 shadow-[0_2px_8px_rgba(0,0,0,0.06)]' : 'text-slate-500 hover:text-slate-700'}`}
+            className={`flex-1 py-3 rounded-xl text-[15px] font-black transition-all outline-none flex items-center justify-center gap-2 ${activeTab === 'home' ? 'bg-white text-indigo-600 shadow-[0_2px_10px_rgba(79,70,229,0.1)] ring-1 ring-indigo-100' : 'text-slate-500 hover:text-slate-700'}`}
           >
+            <MapPin size={16} className={activeTab === 'home' ? 'text-indigo-500' : 'text-slate-400'} />
             導航首頁
           </button>
           <button 
             onClick={() => setActiveTab('faq')} 
-            className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all outline-none ${activeTab === 'faq' ? 'bg-white text-indigo-700 shadow-[0_2px_8px_rgba(0,0,0,0.06)]' : 'text-slate-500 hover:text-slate-700'}`}
+            className={`flex-1 py-3 rounded-xl text-[15px] font-black transition-all outline-none flex items-center justify-center gap-2 ${activeTab === 'faq' ? 'bg-white text-indigo-600 shadow-[0_2px_10px_rgba(79,70,229,0.1)] ring-1 ring-indigo-100' : 'text-slate-500 hover:text-slate-700'}`}
           >
+            <Info size={16} className={activeTab === 'faq' ? 'text-indigo-500' : 'text-slate-400'} />
             常見問答
           </button>
         </div>
