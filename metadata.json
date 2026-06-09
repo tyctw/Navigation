@@ -1,0 +1,8 @@
+{
+  "name": "會考落點分析導航",
+  "description": "專為會考生、家長與老師打造的落點分析入口地圖。整合全國各區會考大數據工具，方便快速尋找對應的志願選填系統。",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
