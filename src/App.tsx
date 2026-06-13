@@ -74,6 +74,9 @@ export default function App() {
   const [annDisplayType, setAnnDisplayType] = useState<'banner' | 'modal'>('banner');
   const [annStart, setAnnStart] = useState('');
   const [annEnd, setAnnEnd] = useState('');
+  const [annLinkUrl, setAnnLinkUrl] = useState('');
+  const [annLinkText, setAnnLinkText] = useState('');
+  const [editingAnnouncement, setEditingAnnouncement] = useState<string | null>(null);
   
   const [editingLink, setEditingLink] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<Partial<ExamLink>>({});
@@ -440,6 +443,30 @@ export default function App() {
     }
   };
 
+  const startEditingAnnouncement = (ann: Announcement) => {
+    setEditingAnnouncement(ann.id);
+    setAnnTitle(ann.title);
+    setAnnContent(ann.content || '');
+    setAnnDisplayType(ann.display_type || 'banner');
+    setAnnStart(ann.start_date || '');
+    setAnnEnd(ann.end_date || '');
+    setAnnLinkUrl(ann.link_url || '');
+    setAnnLinkText(ann.link_text || '');
+    setShowAnnouncementForm(true);
+  };
+
+  const cancelEditingAnnouncement = () => {
+    setEditingAnnouncement(null);
+    setAnnTitle('');
+    setAnnContent('');
+    setAnnDisplayType('banner');
+    setAnnStart('');
+    setAnnEnd('');
+    setAnnLinkUrl('');
+    setAnnLinkText('');
+    setShowAnnouncementForm(false);
+  };
+
   const handleAddAnnouncement = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!annTitle || !annContent) return;
@@ -452,36 +479,58 @@ export default function App() {
     }
 
     try {
-      const { data, error } = await supabase
-        .from('announcements')
-        .insert([{
-          title: annTitle,
-          content: annContent,
-          display_type: annDisplayType,
-          start_date: annStart || null,
-          end_date: annEnd || null,
-          is_active: true
-        }])
-        .select();
-
-      if (error) {
-        console.error('Supabase error:', error);
-        alert(`資料庫寫入失敗: \n${error.message}`);
-        return;
-      } else if (data) {
-        setAnnouncements([data[0], ...announcements]);
-        showToast('系統公告新增成功', 'success');
+      if (editingAnnouncement) {
+        const { data, error } = await supabase
+          .from('announcements')
+          .update({
+            title: annTitle,
+            content: annContent,
+            display_type: annDisplayType,
+            start_date: annStart || null,
+            end_date: annEnd || null,
+            link_url: annLinkUrl || null,
+            link_text: annLinkText || null,
+          })
+          .eq('id', editingAnnouncement)
+          .select();
+        
+        if (error) {
+          console.error('Update error:', error);
+          showToast('更新失敗', 'error');
+          return;
+        }
+        if (data) {
+          setAnnouncements(announcements.map(a => a.id === editingAnnouncement ? data[0] : a));
+          showToast('系統公告更新成功', 'success');
+        }
+      } else {
+        const { data, error } = await supabase
+          .from('announcements')
+          .insert([{
+            title: annTitle,
+            content: annContent,
+            display_type: annDisplayType,
+            start_date: annStart || null,
+            end_date: annEnd || null,
+            is_active: true,
+            link_url: annLinkUrl || null,
+            link_text: annLinkText || null,
+          }])
+          .select();
+        
+        if (error) {
+          console.error('Supabase error:', error);
+          alert(`資料庫寫入失敗: \n${error.message}`);
+          return;
+        } else if (data) {
+          setAnnouncements([data[0], ...announcements]);
+          showToast('系統公告新增成功', 'success');
+        }
       }
-      
-      setAnnTitle('');
-      setAnnContent('');
-      setAnnDisplayType('banner');
-      setAnnStart('');
-      setAnnEnd('');
-      setShowAnnouncementForm(false);
+      cancelEditingAnnouncement();
     } catch (err) {
       console.error(err);
-      showToast('新增失敗', 'error');
+      showToast('處理失敗', 'error');
     }
   };
 
@@ -659,7 +708,7 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800 pb-12 flex flex-col w-full selection:bg-indigo-100 selection:text-indigo-900 relative">
+    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-800 flex flex-col w-full selection:bg-indigo-100 selection:text-indigo-900 relative">
       {/* Decorative Blur Backgrounds */}
       <div className="absolute top-0 inset-x-0 h-[600px] w-full pointer-events-none overflow-hidden">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[80%] bg-indigo-300/20 blur-[120px] rounded-full mix-blend-multiply" />
@@ -667,8 +716,8 @@ export default function App() {
       </div>
 
       {/* Modern Floating Header Navigation */}
-      <div className="sticky top-4 sm:top-6 z-50 px-4 sm:px-6 w-full max-w-[1400px] mx-auto transition-all duration-300">
-        <header className="w-full bg-white/60 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-3xl p-3 sm:px-5 sm:py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0 relative">
+      <div className="sticky top-2 sm:top-6 z-50 px-2 sm:px-6 w-full max-w-[1400px] mx-auto transition-all duration-300">
+        <header className="w-full bg-white/60 backdrop-blur-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-3xl px-3 py-2 sm:px-5 sm:py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0 relative">
           {/* Left: Logo & Title */}
           <div className="flex items-center justify-between w-full md:w-auto shrink-0 relative z-10">
             <div className="flex items-center gap-3 sm:gap-4 shrink-0">
@@ -743,15 +792,8 @@ export default function App() {
           </div>
           
           {/* Right Side Actions */}
-          <div className="flex flex-col gap-2 w-full md:w-auto mt-1 md:mt-0 relative z-10 shrink-0">
-            <div className="flex justify-end items-center gap-3 w-full md:w-auto">
-              <div className="hidden lg:flex items-center gap-2 bg-emerald-50/90 px-4 py-2.5 sm:py-3 rounded-2xl border border-emerald-100/50 shadow-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span className="text-[11px] font-bold text-emerald-700 tracking-wide mt-[1px]">即時連線</span>
-              </div>
+          <div className="hidden md:flex flex-col gap-2 w-auto mt-0 relative z-10 shrink-0">
+            <div className="flex justify-end items-center gap-3 w-auto">
               <button 
                 onClick={() => isAdmin ? setIsAdmin(false) : setShowAdminLogin(true)}
                 className={`hidden md:flex items-center gap-2 px-5 py-2.5 sm:py-3 rounded-2xl border text-sm font-bold transition-all duration-300 shadow-sm outline-none ${
@@ -793,9 +835,9 @@ export default function App() {
       </div>
 
       {/* Main Strategic Viewport */}
-      <main className="flex-grow w-full max-w-6xl mx-auto p-4 sm:p-6 md:p-8 flex flex-col gap-8 relative">
+      <main className="flex-grow w-full max-w-6xl mx-auto px-4 py-2 sm:p-6 md:p-8 flex flex-col gap-3 sm:gap-8 relative">
         {/* Mobile Navigation Tabs */}
-        <div className="flex md:hidden items-center bg-slate-100 p-1.5 rounded-2xl border border-slate-200/50 mb-2 w-full shadow-inner sticky top-24 z-40">
+        <div className="flex md:hidden items-center bg-slate-100 p-1.5 rounded-2xl border border-slate-200/50 w-full shadow-inner sticky top-[72px] sm:top-24 z-40 -mt-1 sm:mt-0 mb-1 sm:mb-2 text-sm sm:text-base">
           <button 
             onClick={() => setActiveTab('home')} 
             className={`flex-1 py-3 rounded-xl text-[15px] font-black transition-all outline-none flex items-center justify-center gap-2 ${activeTab === 'home' ? 'bg-white text-indigo-600 shadow-[0_2px_10px_rgba(79,70,229,0.1)] ring-1 ring-indigo-100' : 'text-slate-500 hover:text-slate-700'}`}
@@ -937,6 +979,11 @@ export default function App() {
                              <span className="text-sm text-slate-600 font-medium tracking-wide">{ann.content}</span>
                            </>
                          )}
+                         {ann.link_url && (
+                           <a href={ann.link_url} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center gap-1 px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-full text-xs font-bold hover:bg-indigo-100 transition-colors">
+                             {ann.link_text || '了解更多'}
+                           </a>
+                         )}
                        </div>
                        
                        {/* Repeat content for smooth continuous scrolling if needed. For now simple padding is often enough to visually represent a ticker. */}
@@ -950,6 +997,11 @@ export default function App() {
                              </div>
                              <span className="text-sm text-slate-600 font-medium tracking-wide">{ann.content}</span>
                            </>
+                         )}
+                         {ann.link_url && (
+                           <a href={ann.link_url} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center gap-1 px-3 py-1 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-full text-xs font-bold hover:bg-indigo-100 transition-colors">
+                             {ann.link_text || '了解更多'}
+                           </a>
                          )}
                        </div>
                     </div>
@@ -1032,6 +1084,15 @@ export default function App() {
                         </div>
                       )}
                       
+                      {ann.link_url && (
+                        <div className="w-full mb-8">
+                          <a href={ann.link_url} target="_blank" rel="noopener noreferrer" className="w-full inline-flex justify-center items-center gap-2 py-4 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-lg rounded-2xl transition-all shadow-sm border border-indigo-200 group outline-none">
+                            <span>{ann.link_text || '了解更多'}</span>
+                            <ExternalLink size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                          </a>
+                        </div>
+                      )}
+
                       <div className="w-full flex flex-col gap-4">
                         <button 
                           onClick={() => setClosedModalIds(prev => new Set(prev).add(ann.id))}
@@ -1854,15 +1915,15 @@ export default function App() {
                     <div className="px-6 pb-4 flex justify-between items-center border-b border-slate-100 mb-4">
                       <h4 className="text-sm font-bold text-slate-700 flex items-center gap-2"><Bell size={16} className="text-teal-500" /> 系統公告管理</h4>
                       <button 
-                        onClick={() => setShowAnnouncementForm(!showAnnouncementForm)}
+                        onClick={() => editingAnnouncement ? cancelEditingAnnouncement() : setShowAnnouncementForm(!showAnnouncementForm)}
                         className="text-xs font-bold bg-teal-50 text-teal-700 px-4 py-2 rounded-xl border border-teal-200/60 hover:bg-teal-600 hover:text-white transition-all duration-300 flex items-center gap-2 shadow-sm group hover:shadow-md"
                       >
-                        {showAnnouncementForm ? <X size={14} /> : <Plus size={14} />}
-                        <span>{showAnnouncementForm ? '取消新增' : '新增公告'}</span>
+                        {(showAnnouncementForm || editingAnnouncement) ? <X size={14} /> : <Plus size={14} />}
+                        <span>{(showAnnouncementForm || editingAnnouncement) ? '取消編輯' : '新增公告'}</span>
                       </button>
                     </div>
 
-                    {showAnnouncementForm && (
+                    {(showAnnouncementForm || editingAnnouncement) && (
                       <div className="px-6 pb-6 border-b border-teal-100/40 bg-teal-50/20 mb-4">
                         <form onSubmit={handleAddAnnouncement} className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4">
                     <div className="group">
@@ -1878,11 +1939,31 @@ export default function App() {
                     </div>
                     <div className="group">
                       <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">公告內容</label>
-                      <input 
-                        type="text"
+                      <textarea 
                         value={annContent}
                         onChange={(e) => setAnnContent(e.target.value)}
-                        placeholder="詳細內容或說明..."
+                        placeholder="詳細內容或說明... (支援換行)"
+                        rows={4}
+                        className="w-full bg-white/80 text-slate-900 px-4 py-2.5 border border-slate-200/80 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-400 text-sm rounded-xl transition-all shadow-sm outline-none resize-y"
+                      />
+                    </div>
+                    <div className="group">
+                      <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">連結文字 (選填)</label>
+                      <input 
+                        type="text"
+                        value={annLinkText}
+                        onChange={(e) => setAnnLinkText(e.target.value)}
+                        placeholder="例如：了解更多"
+                        className="w-full bg-white/80 text-slate-900 px-4 py-2.5 border border-slate-200/80 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-400 text-sm rounded-xl transition-all shadow-sm outline-none"
+                      />
+                    </div>
+                    <div className="group">
+                      <label className="flex items-center gap-1.5 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">連結網址 (選填)</label>
+                      <input 
+                        type="url"
+                        value={annLinkUrl}
+                        onChange={(e) => setAnnLinkUrl(e.target.value)}
+                        placeholder="https://..."
                         className="w-full bg-white/80 text-slate-900 px-4 py-2.5 border border-slate-200/80 focus:ring-4 focus:ring-teal-500/10 focus:border-teal-400 text-sm rounded-xl transition-all shadow-sm outline-none"
                       />
                     </div>
@@ -1920,7 +2001,7 @@ export default function App() {
                         type="submit"
                         className="w-full py-3 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm rounded-xl transition-all shadow-md hover:shadow-lg outline-none"
                       >
-                        發佈公告
+                        {editingAnnouncement ? '儲存變更' : '發佈公告'}
                       </button>
                     </div>
                   </form>
@@ -1938,18 +2019,29 @@ export default function App() {
                           <div className="flex items-center gap-2 mb-1">
                             <span className={`w-2 h-2 rounded-full ${ann.is_active ? 'bg-teal-500' : 'bg-slate-300'}`}></span>
                             <span className="font-bold text-slate-800">{ann.title}</span>
+                            {ann.link_url && <Link size={12} className="text-teal-500 ml-1" />}
                           </div>
                           <p className="text-xs text-slate-500 truncate max-w-md">{ann.content || '無詳細內容'}</p>
                           <div className="text-[10px] text-slate-400 mt-1 uppercase tracking-wide">
                             {ann.start_date || '即時'} ~ {ann.end_date || '永久'}
                           </div>
                         </div>
-                        <button
-                          onClick={() => handleDeleteAnnouncement(ann.id)}
-                          className="text-slate-400 hover:text-red-500 p-2 border border-transparent hover:border-red-100 hover:bg-red-50 rounded-lg transition-all"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                        <div className="flex flex-row items-center gap-1">
+                          <button
+                            onClick={() => startEditingAnnouncement(ann)}
+                            className="text-slate-400 hover:text-teal-600 p-2 border border-transparent hover:border-teal-100 hover:bg-teal-50 rounded-lg transition-all"
+                            title="編輯此公告"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteAnnouncement(ann.id)}
+                            className="text-slate-400 hover:text-red-500 p-2 border border-transparent hover:border-red-100 hover:bg-red-50 rounded-lg transition-all"
+                            title="刪除此公告"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -2533,6 +2625,8 @@ CREATE TABLE public.announcements (
   display_type text DEFAULT 'banner',
   start_date text,
   end_date text,
+  link_url text,
+  link_text text,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
