@@ -3,7 +3,7 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --animate-marquee-scroll: marquee-scroll 25s linear infinite;
+  --animate-marquee-scroll: marquee-scroll 45s linear infinite;
   
   @keyframes marquee-scroll {
     0% { transform: translateX(100%); }
