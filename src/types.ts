@@ -22,6 +22,8 @@ export interface Announcement {
   start_date?: string;
   end_date?: string;
   created_at: string;
+  link_url?: string;
+  link_text?: string;
 }
 
 export interface ImportantEvent {
