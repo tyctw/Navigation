@@ -8,6 +8,16 @@ export default defineConfig({
 
   base: '/Navigation/',
 
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        about: path.resolve(__dirname, 'about.html'),
+        privacy: path.resolve(__dirname, 'privacy.html'),
+      },
+    },
+  },
+
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.'),

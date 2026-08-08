@@ -101,6 +101,7 @@ export default function App() {
   const [isValidating, setIsValidating] = useState(false);
   const [invalidLinks, setInvalidLinks] = useState<Record<string, boolean>>({});
   const [showShareModal, setShowShareModal] = useState(false);
+  const [isLinkCopied, setIsLinkCopied] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -274,9 +275,14 @@ export default function App() {
     }
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    alert('網址已複製到剪貼簿！');
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setIsLinkCopied(true);
+      setTimeout(() => setIsLinkCopied(false), 2500);
+    } catch {
+      showToast('無法自動複製連結，請手動複製網址列內容。', 'error');
+    }
   };
 
   const toggleFavorite = (id: string, e: React.MouseEvent) => {
@@ -1183,7 +1189,7 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-md"
             >
               <motion.div 
                 initial={{ scale: 0.95, opacity: 0, y: 10 }}
@@ -1384,41 +1390,52 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4"
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-md"
               onClick={() => setShowShareModal(false)}
             >
               <motion.div 
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl relative"
+                className="relative w-full max-w-2xl overflow-hidden rounded-[2rem] border border-white/70 bg-white shadow-[0_24px_80px_-20px_rgba(15,23,42,0.55)]"
                 onClick={e => e.stopPropagation()}
               >
-                <div className="absolute top-4 right-4">
-                  <button onClick={() => setShowShareModal(false)} className="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-full p-2 transition-colors">
-                    <X size={20} />
-                  </button>
-                </div>
+                <div className="pointer-events-none absolute -left-16 -top-20 h-56 w-56 rounded-full bg-indigo-300/35 blur-3xl"></div>
+                <div className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-sky-200/50 blur-3xl"></div>
+                <button onClick={() => setShowShareModal(false)} aria-label="關閉分享視窗" className="absolute right-5 top-5 z-20 rounded-full border border-slate-200/70 bg-white/80 p-2 text-slate-400 shadow-sm backdrop-blur transition hover:bg-white hover:text-slate-700">
+                  <X size={18} />
+                </button>
                 
-                <div className="text-center">
-                  <div className="flex justify-center mb-5">
-                    <div className="bg-indigo-50 text-indigo-600 p-4 rounded-full shadow-inner border border-indigo-100">
+                <div className="relative p-6 sm:p-9">
+                  <div className="mb-6 text-center sm:mb-8">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-sky-50 text-indigo-600 shadow-sm">
                       <Share2 size={28} />
                     </div>
+                    <div className="mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-indigo-500">Spread the word</div>
+                    <h2 className="text-2xl font-black tracking-tight text-slate-800 sm:text-3xl">分享這份升學導航</h2>
+                    <p className="mt-2 text-sm font-medium leading-6 text-slate-500">讓需要會考資訊的同學與家長，也能快速找到方向。</p>
                   </div>
-                  <h2 className="text-2xl font-black text-slate-800 tracking-tight mb-2">分享這份導航</h2>
-                  <p className="text-slate-500 font-medium text-sm mb-6">讓更多人獲得優質的會考落點資訊</p>
                   
-                  <div className="flex justify-center mb-6">
-                    <div className="p-3 bg-white rounded-[24px] shadow-sm border border-slate-100">
+                  <div className="grid items-center gap-6 rounded-3xl border border-indigo-100/80 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/80 p-4 sm:grid-cols-[auto_1fr] sm:gap-7 sm:p-5">
+                    <div className="mx-auto rounded-2xl border border-white bg-white p-3 shadow-[0_12px_28px_-12px_rgba(79,70,229,0.32)]">
                       <QRCodeSVG value={window.location.href} size={160} level="H" includeMargin={true} />
+                    </div>
+                    <div className="text-center sm:text-left">
+                      <p className="text-base font-black text-slate-800">掃描 QR Code</p>
+                      <p className="mt-1 text-xs font-medium leading-5 text-slate-500">用手機開啟後，可直接傳給朋友或加入收藏。</p>
+                      <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
+                        <span className="rounded-full border border-indigo-100 bg-white px-3 py-1 text-[11px] font-bold text-indigo-600">快速開啟</span>
+                        <span className="rounded-full border border-sky-100 bg-white px-3 py-1 text-[11px] font-bold text-sky-600">方便轉傳</span>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-center gap-3 mb-6">
+                  <div className="mt-6">
+                    <p className="mb-3 text-center text-xs font-black tracking-wide text-slate-500">選擇分享平台</p>
+                    <div className="grid grid-cols-4 gap-2.5 sm:gap-3">
                     <button
                       onClick={() => window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(window.location.href)}`, '_blank')}
-                      className="w-12 h-12 flex items-center justify-center bg-[#00B900] text-white rounded-2xl hover:scale-105 hover:shadow-lg hover:shadow-[#00B900]/20 transition-all outline-none"
+                      className="aspect-square w-full rounded-2xl bg-[#00B900] text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#00B900]/25 focus-visible:ring-4 focus-visible:ring-[#00B900]/25 outline-none flex items-center justify-center"
                       title="分享至 LINE"
                     >
                       <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -1430,7 +1447,7 @@ export default function App() {
                         copyToClipboard();
                         window.open('https://www.instagram.com', '_blank');
                       }}
-                      className="w-12 h-12 flex items-center justify-center bg-gradient-to-tr from-[#FFDC80] via-[#F56040] to-[#E1306C] text-white rounded-2xl hover:scale-105 hover:shadow-lg hover:shadow-[#F56040]/20 transition-all outline-none"
+                      className="aspect-square w-full rounded-2xl bg-gradient-to-tr from-[#FFDC80] via-[#F56040] to-[#E1306C] text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#F56040]/25 focus-visible:ring-4 focus-visible:ring-[#F56040]/25 outline-none flex items-center justify-center"
                       title="複製連結並開啟 IG"
                     >
                       <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -1439,7 +1456,7 @@ export default function App() {
                     </button>
                     <button
                       onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}
-                      className="w-12 h-12 flex items-center justify-center bg-[#1877F2] text-white rounded-2xl hover:scale-105 hover:shadow-lg hover:shadow-[#1877F2]/20 transition-all outline-none"
+                      className="aspect-square w-full rounded-2xl bg-[#1877F2] text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#1877F2]/25 focus-visible:ring-4 focus-visible:ring-[#1877F2]/25 outline-none flex items-center justify-center"
                       title="分享至 Facebook"
                     >
                       <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -1448,7 +1465,7 @@ export default function App() {
                     </button>
                     <button
                       onClick={() => window.open(`https://threads.net/intent/post?text=${encodeURIComponent('高中職會考落點分析導航：\n' + window.location.href)}`, '_blank')}
-                      className="w-12 h-12 flex items-center justify-center bg-black text-white rounded-2xl hover:scale-105 hover:shadow-lg hover:shadow-black/20 transition-all outline-none"
+                      className="aspect-square w-full rounded-2xl bg-slate-900 text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-900/25 focus-visible:ring-4 focus-visible:ring-slate-900/20 outline-none flex items-center justify-center"
                       title="分享至 Threads"
                     >
                       <svg viewBox="0 0 192 192" fill="currentColor" className="w-6 h-6">
@@ -1459,11 +1476,12 @@ export default function App() {
                   
                   <button
                     onClick={copyToClipboard}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 hover:border-slate-300 font-bold text-sm rounded-2xl transition-all shadow-sm outline-none"
+                    className={`mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border px-4 py-3.5 text-sm font-black shadow-sm transition-all outline-none ${isLinkCopied ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-white text-slate-700 hover:border-indigo-200 hover:bg-indigo-50/50 hover:text-indigo-700'}`}
                   >
-                    <Copy size={18} className="text-slate-500" />
-                    <span>複製連結</span>
+                    {isLinkCopied ? <CheckCircle2 size={18} /> : <Copy size={18} className="text-slate-500" />}
+                    <span>{isLinkCopied ? '連結已複製！' : '複製分享連結'}</span>
                   </button>
+                </div>
                 </div>
               </motion.div>
             </motion.div>
@@ -2590,99 +2608,10 @@ export default function App() {
                 <div className="bg-slate-50 p-4 rounded-full text-slate-400 mb-4 border border-slate-100">
                   <Map size={32} />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">查無相符資料 或 本區尚未建置端點</h3>
+                <h3 className="text-xl font-bold text-slate-800 mb-2">目前沒有符合條件的資源</h3>
                 <p className="text-slate-500 max-w-md">
                   {isAdmin ? '點擊上方的「中控台 - 新增資料」來開始建構引導系統。' : '目前在該分類或是所有區域中沒有可顯示的資源，請嘗試切換上方的分類標籤。'}
                 </p>
-                {isAdmin && (
-                  <div className="text-left w-full max-w-3xl mt-8 bg-slate-50 border border-amber-200 text-slate-700 p-5 rounded-xl">
-                    <p className="text-sm font-bold text-amber-600 mb-2 flex items-center gap-2">
-                      <Shield size={16} />
-                      Supabase 初始化語法參考
-                    </p>
-                    <p className="text-xs text-slate-500 mb-3">若為首次部署，請於 Supabase SQL Editor 執行此指令建立基礎架構：</p>
-                    <pre className="text-xs bg-slate-900 p-4 rounded-lg text-blue-100 overflow-x-auto font-mono">
-{`CREATE TABLE public.exam_links (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  title text NOT NULL,
-  url text NOT NULL,
-  region text NOT NULL,
-  category text DEFAULT '考後落點',
-  description text,
-  icon text,
-  badge text,
-  pinned_start text,
-  pinned_end text,
-  click_count integer DEFAULT 0,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
-CREATE TABLE public.announcements (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  title text NOT NULL,
-  content text,
-  is_active boolean DEFAULT true,
-  display_type text DEFAULT 'banner',
-  start_date text,
-  end_date text,
-  link_url text,
-  link_text text,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
-CREATE TABLE public.admin_logs (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  status text NOT NULL,
-  user_agent text,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
-CREATE TABLE public.important_events (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  title text NOT NULL,
-  date text NOT NULL,
-  time text,
-  end_date text,
-  end_time text,
-  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
-ALTER TABLE public.exam_links ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow select" ON public.exam_links FOR SELECT USING (true);
-CREATE POLICY "Allow insert" ON public.exam_links FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow update" ON public.exam_links FOR UPDATE USING (true);
-CREATE POLICY "Allow delete" ON public.exam_links FOR DELETE USING (true);
-
-ALTER TABLE public.announcements ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow select" ON public.announcements FOR SELECT USING (true);
-CREATE POLICY "Allow insert" ON public.announcements FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow update" ON public.announcements FOR UPDATE USING (true);
-CREATE POLICY "Allow delete" ON public.announcements FOR DELETE USING (true);
-
-ALTER TABLE public.admin_logs ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow select" ON public.admin_logs FOR SELECT USING (true);
-CREATE POLICY "Allow insert" ON public.admin_logs FOR INSERT WITH CHECK (true);
-
-ALTER TABLE public.important_events ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow select" ON public.important_events FOR SELECT USING (true);
-CREATE POLICY "Allow insert" ON public.important_events FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow update" ON public.important_events FOR UPDATE USING (true);
-CREATE POLICY "Allow delete" ON public.important_events FOR DELETE USING (true);
-
-CREATE TABLE public.admin_settings (
-  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  password text NOT NULL
-);
-
-ALTER TABLE public.admin_settings ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Allow select" ON public.admin_settings FOR SELECT USING (true);
-CREATE POLICY "Allow update" ON public.admin_settings FOR UPDATE USING (true);
-
-INSERT INTO public.admin_settings (password) VALUES ('admin123');
-`}
-                    </pre>
-                  </div>
-                )}
               </div>
             )}
             </div>
@@ -2768,21 +2697,21 @@ INSERT INTO public.admin_settings (password) VALUES ('admin123');
           </div>
           
           <div className="flex flex-wrap justify-center items-center gap-1 sm:gap-2 bg-white/60 p-1.5 rounded-2xl border border-slate-200/50 shadow-sm backdrop-blur-md">
-            <button 
-              onClick={() => setShowAboutModal(true)} 
+            <a
+              href={`${import.meta.env.BASE_URL}about.html`}
               className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold text-slate-600 hover:text-indigo-600 hover:bg-white rounded-xl transition-all outline-none"
             >
               <Info size={14} className="hidden sm:block" />
               關於我們
-            </button>
+            </a>
             <div className="w-1 h-1 rounded-full bg-slate-300/50 hidden sm:block"></div>
-            <button 
-              onClick={() => setShowPrivacyModal(true)} 
+            <a
+              href={`${import.meta.env.BASE_URL}privacy.html`}
               className="flex items-center gap-1.5 px-4 py-2 text-sm font-bold text-slate-600 hover:text-indigo-600 hover:bg-white rounded-xl transition-all outline-none"
             >
               <FileText size={14} className="hidden sm:block" />
               隱私權政策
-            </button>
+            </a>
             <div className="w-1 h-1 rounded-full bg-slate-300/50 hidden sm:block"></div>
             <button 
               onClick={() => setShowContactModal(true)} 
